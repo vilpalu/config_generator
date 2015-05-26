@@ -28,8 +28,8 @@ cat > temp <<EOF
 EOF
 }
 
-add_vap() {
 
+add_2() {
 cat >>temp<<EOF
 {
             "maxclients": 128,
@@ -50,6 +50,30 @@ cat >>temp<<EOF
             },
             "ssid2vlan": {
 EOF
+}
+add_5() {
+cat >>temp<<EOF
+{
+            "maxclients": 128,
+            "ifname": "ath1",
+            "bssid": {
+              "value": "00:00:00:00:00:00",
+              "enabled": false
+            },
+            "cwm": false,
+            "shortgi": true,
+            "wmm": true,
+            "mode": "ap",
+            "minsignal": -90,
+            "l2isolation": false,
+            "rate": {
+              "legacy": "auto",
+              "mcs": "auto"
+            },
+            "ssid2vlan": {
+EOF
+}
+add_vap() {
 echo "\"id\":" $vlan_id","  >>temp
 if [ "$vlan_id" = "0" ]
         then
@@ -534,8 +558,10 @@ echo "irasykite tinklo slaptazodi"
 
 read psw
 begin
+add_2
 add_vap
 ghz
+add_5
 add_vap
 pabaiga
 
