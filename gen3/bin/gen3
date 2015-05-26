@@ -1,0 +1,45 @@
+#!/bin/bash
+#generatorius konfiguracijos
+
+start() {
+cat > temp <<EOF
+{
+  "wireless": {
+    "countrycode": "LT",
+    "scenario": "ptmp",
+    "radio": [
+      {
+        "fragmentation": {
+          "enabled": false,
+          "size": 256
+        },
+        "ifname": "wifi0",
+        "prohibited": false,
+        "ieeemode": "bgn",
+        "acktimeout": 100,
+        "bawinsize": 64,
+        "txpower": 17,
+        "rts": {
+          "enabled": false,
+          "size": 256
+        },
+        "vap": [
+          {
+            "maxclients": 128,
+            "ifname": "ath0",
+            "bssid": {
+              "value": "00:00:00:00:00:00",
+              "enabled": false
+            },
+            "cwm": false,
+            "shortgi": true,
+            "wmm": true,
+            "mode": "ap",
+            "minsignal": -90,
+            "l2isolation": false,
+            "rate": {
+              "legacy": "auto",
+              "mcs": "auto"
+            },
+            "ssid2vlan": {
+            
