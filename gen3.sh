@@ -635,6 +635,7 @@ else
 	echo "irasykite RADIUS serverio slaptazodi"
 	read secret
 	begin
+	add_2
 	add_vap2
 	ghz
 	add_5
