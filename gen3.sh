@@ -4,243 +4,51 @@
 begin() {
 cat > temp <<EOF
 {
-  "network": {
-    "router": {
-      "wan": {
-        "pppoe": {
-          "mtu": 1492,
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ],
-            "enabled": false
-          },
-          "password": "pass",
-          "username": "user"
-        },
-        "dynamic": {
-          "ip": [
-            {
-              "ip": "192.168.3.100",
-              "prefix": 24
-            }
-          ],
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ],
-            "enabled": false
-          },
-          "fallback": true,
-          "gateway": "192.168.3.1"
-        },
-        "mode": "dynamic",
-        "static": {
-          "ip": [
-            {
-              "ip": "192.168.3.100",
-              "prefix": 24
-            }
-          ],
-          "gateway": "192.168.3.1",
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ]
-          }
-        }
-      },
-      "secondary": {
-        "ip": {
-          "ip": "192.168.2.250",
-          "prefix": 24
-        },
-        "enabled": false
-      },
-      "lan": {
-        "ip": {
-          "ip": "192.168.2.66",
-          "prefix": 24
-        }
-      }
-    },
-    "topology": "bridge",
-    "router6": {
-      "wan": {
-        "pppoe": {
-          "mtu": 1492,
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ],
-            "enabled": false
-          },
-          "password": "pass",
-          "username": "user"
-        },
-        "dynamic": {
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ],
-            "enabled": false
-          },
-          "prefixdelegation": false,
-          "stateful": true
-        },
-        "mode": "static",
-        "static": {
-          "ip": [
-            {
-              "ip": "fc00::c0:a8:2:42",
-              "prefix": 64
-            }
-          ],
-          "gateway": "fc00::c0:a8:2:1",
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ]
-          }
-        }
-      },
-      "lan": {
-        "ip": {
-          "ip": "fc00:1::c0:a8:2:42",
-          "prefix": 64
-        }
-      }
-    },
-    "ethernet": {
-      "eth1": {
-        "enabled": true
-      },
-      "eth0": {
-        "enabled": true
-      }
-    },
-    "nat": true,
-    "bridge": {
-      "management6": {
-        "mode": "dynamic",
-        "dynamic": {
-          "stateful": false,
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ],
-            "enabled": false
-          }
-        },
-        "static": {
-          "ip": [
-            {
-              "ip": "2000::66",
-              "prefix": 64
-            }
-          ],
-          "gateway": "2000::1",
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ]
-          }
-        }
-      },
-      "vlan": {
-        "id": 2,
-        "enabled": false
-      },
-      "ipv6": true,
-      "management": {
-        "mode": "dynamic",
-        "dynamic": {
-          "ip": [
-            {
-              "ip": "192.168.2.66",
-              "prefix": 24
-            }
-          ],
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ],
-            "enabled": false
-          },
-          "fallback": true,
-          "gateway": "192.168.2.1"
-        },
-        "secondary": {
-          "ip": {
-            "ip": "192.168.1.100",
-            "prefix": 24
-          },
-          "enabled": true
-        },
-        "static": {
-          "ip": [
-            {
-              "ip": "192.168.2.66",
-              "prefix": 24
-            }
-          ],
-          "gateway": "192.168.2.1",
-          "dns": {
-            "servers": [
-              "",
-              ""
-            ]
-          }
-        }
-      }
-    }
-  },
   "wireless": {
     "countrycode": "LT",
     "scenario": "ptmp",
     "radio": [
       {
-        "amsdu": true,
         "fragmentation": {
-          "size": 256,
-          "enabled": false
+          "enabled": false,
+          "size": 256
         },
-        "prohibited": false,
-        "enabled": true,
-        "channel": {
-          "list": [
-            2412
-          ],
-          "width": 20,
-          "nonstandard": false,
-          "select": "list",
-          "extension": "upper"
-        },
-        "ieeemode": "bgn",
-        "txpower": 20,
         "ifname": "wifi0",
+        "prohibited": false,
+        "ieeemode": "bgn",
+        "acktimeout": 100,
+        "bawinsize": 64,
+        "txpower": 17,
+        "rts": {
+          "enabled": false,
+          "size": 256
+        },
         "vap": [
-          {
+
 EOF
 }
 
 add_vap() {
 
 cat >>temp<<EOF
- "wmm": true,
+{
+            "maxclients": 128,
+            "ifname": "ath0",
+            "bssid": {
+              "value": "00:00:00:00:00:00",
+              "enabled": false
+            },
+            "cwm": false,
+            "shortgi": true,
+            "wmm": true,
+            "mode": "ap",
+            "minsignal": -90,
             "l2isolation": false,
-            "hidden": false,
+            "rate": {
+              "legacy": "auto",
+              "mcs": "auto"
+            },
             "ssid2vlan": {
-              "id":
 EOF
 echo "\"id\":" $vlan_id","  >>temp
 if [ "$vlan_id" = "0" ]
@@ -252,7 +60,7 @@ else
         echo "yra vlan"
 fi
 
-at >> temp<<EOF
+cat >> temp<<EOF
             },
             "wds": true,
 EOF
