@@ -725,11 +725,11 @@ read vlan_id
 echo "irasykite tinklo slaptazodi"
 
 read psw
-begin()
-add_vap()
-ghz()
-add_vap()
-pabaiga()
+begin
+add_vap
+ghz
+add_vap
+pabaiga
 
 
 
