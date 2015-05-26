@@ -545,28 +545,101 @@ cat>>temp<<EOF
 }
 EOF
 }
+
+add_vap2() {
+echo "\"id\":" $vlan_id","  >>temp
+cat >> temp<<EOF
+            },
+            "wds": true,
+EOF
+
+echo  "\"ssid\": \""$ssid"\",">>temp
+cat >>temp<< EOF
+            "rate": {
+              "legacy": "auto",
+              "mcs": "auto"
+            },
+            "hidden": false,
+            "cwm": false,
+            "security": {
+              "wpapsk": {
+                "passphrase": "slaptazodis"
+              },
+              "mode": "wpaenterprise",
+              "wpaenterprise": {
+                "authentication": {
+                  "eap": "ttls",
+                  "password": "password",
+                  "identity": "username",
+                  "servers": [
+                    {
+                      "port": 1812,
+EOF
+echo  "\"secret\": \""$secret"\",">>temp
+echo  "\"address\": \""$radius"\",">>temp
+cat >>temp<<EOF
+                    }
+                  ]
+                },
+                "accounting": {
+                  "servers": [
+                    {
+                      "port": 1813,
+EOF
+echo  "\"secret\": \""$secret"\",">>temp
+echo  "\"address\": \""$radius"\",">>temp
+cat >>temp<<EOF
+                    }
+                  ],
+                  "enabled": true
+                }
+              },
+              "wep": {
+                "length": 128,
+                "key": "",
+                "index": 1
+              }
+            }
+          }
+EOF
+}
 #-----------------------------main
 rm temp
 echo "irasykite tinklo pavadinima"
 read ssid
 
-echo "irasykite vlan, jei ne rasykite "
-
-read vlan_id
-
-echo "irasykite tinklo slaptazodi"
-
-read psw
-begin
-add_2
-add_vap
-ghz
-add_5
-add_vap
-pabaiga
-
-
-
-
+echo " saugos rezimo pasirinkimas:"
+echo "[1] WPA-SPK"
+echo "[2] WPA-ENTERPRICE(802.1x)"
+read pasirinkimas
+if [ "$pasirinkimas" = "1" ]
+then
+	echo "pasirinkote WPA-SPK rezima"
+	echo "irasykite vlan, jei ne rasykite "
+	read vlan_id
+	echo "irasykite tinklo slaptazodi"
+	read psw
+	begin
+	add_2
+	add_vap
+	ghz
+	add_5
+	add_vap
+	pabaiga
+else
+	echo "pasirinkote WPA-ENTERPRICE(802.1x) rezima"
+	echo "irasykite vlan id"
+	read vlan_id
+	echo "irasykite RADIUS serverio IP adresà"
+	read radius
+	echo "irasykite RADIUS serverio slaptazodi"
+	read secret
+	begin
+	add_vap2
+	ghz
+	add_5
+	add_vap2
+	pabaiga
+	
 
 
