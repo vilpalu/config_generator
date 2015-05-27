@@ -587,7 +587,7 @@ cat >>temp<<EOF
                       "port": 1813,
 EOF
 echo  "\"secret\": \""$secret"\",">>temp
-echo  "\"address\": \""$radius"\",">>temp
+echo  "\"address\": \""$radius"\"">>temp
 cat >>temp<<EOF
                     }
                   ],
