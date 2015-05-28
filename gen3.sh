@@ -612,6 +612,76 @@ cat >>temp<<EOF
           }
 EOF
 }
+add_vap_open() {
+echo "\"id\":" $vlan_id","  >>temp
+if [ "$vlan_id" = "0" ]
+        then
+        echo "\"enabled\": false" >>temp
+        echo "nera vlan"
+else
+	echo "\"enabled\": true" >>temp
+        echo "yra vlan"
+fi
+
+cat >> temp<<EOF
+            },
+            "wds": true,
+EOF
+
+echo  "\"ssid\": \""$ssid"\",">>temp
+cat >> temp<<EOF
+            "acl": {
+              "fromurl": {
+                "interval": 60,
+                "url": "http:\/\/",
+                "autoupdate": false
+              },
+              "policy": "open",
+              "source": "manually"
+            },
+            "hidden": false,
+            "management": {
+              "enabled": false,
+              "tagged": false
+            },
+            "security": {
+              "wpapsk": {
+				"passphrase": "testasasdasda"
+              },
+              "mode": "open",
+              "wpaenterprise": {
+                "authentication": {
+                  "password": "password",
+                  "servers": [
+                    {
+                      "port": 1812,
+                      "secret": "",
+                      "address": "0.0.0.0"
+                    }
+                  ],
+                  "identity": "username",
+                  "eap": "ttls"
+                },
+                "accounting": {
+                  "servers": [
+                    {
+                      "port": 1813,
+                      "secret": "",
+                      "address": "0.0.0.0"
+                    }
+                  ],
+                  "enabled": true
+                }
+              },
+              "wep": {
+                "length": 128,
+                "key": "",
+                "index": 1
+              }
+            }
+          }
+EOF
+}
 
 #-----------------------------main
 rm temp
@@ -620,6 +690,7 @@ read ssid
 echo " saugos rezimo pasirinkimas:"
 echo "[1] WPA-SPK"
 echo "[2] WPA-ENTERPRICE(802.1x)"
+echo "[3] Open"
 read pasirinkimas
 if [ "$pasirinkimas" = "1" ]
 then
@@ -635,7 +706,7 @@ then
 	add_5
 	add_vap
 	pabaiga
-else
+elif [ "$pasirinkimas" = "2" ]
 	echo "pasirinkote WPA-ENTERPRICE(802.1x) rezima"
 	echo "irasykite vlan id"
 	read vlan_id
@@ -650,6 +721,19 @@ else
 	add_5
 	add_vap2
 	pabaiga
+elif [ "$pasirinkimas" = "3" ]
+	echo "pasirinkote Open rezima"
+	echo "irasykite vlan, jei ne rasykite 0"
+	read vlan_id	
+	begin
+	add_2
+	add_vap_open
+	ghz
+	add_5
+	add_vap_open
+	pabaiga
+else
+	echo "tokio pasirinkimo nera"
 fi	
 mv temp $ssid.txt
 
