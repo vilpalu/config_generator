@@ -611,11 +611,11 @@ cat >>temp<<EOF
           }
 EOF
 }
+
 #-----------------------------main
 rm temp
 echo "irasykite tinklo pavadinima"
 read ssid
-
 echo " saugos rezimo pasirinkimas:"
 echo "[1] WPA-SPK"
 echo "[2] WPA-ENTERPRICE(802.1x)"
@@ -623,7 +623,7 @@ read pasirinkimas
 if [ "$pasirinkimas" = "1" ]
 then
 	echo "pasirinkote WPA-SPK rezima"
-	echo "irasykite vlan, jei ne rasykite "
+	echo "irasykite vlan, jei ne rasykite 0"
 	read vlan_id
 	echo "irasykite tinklo slaptazodi"
 	read psw
@@ -650,5 +650,5 @@ else
 	add_vap2
 	pabaiga
 fi	
-
+mv temp $ssid.txt
 
