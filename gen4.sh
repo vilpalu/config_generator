@@ -6,40 +6,49 @@ cat > temp <<EOF
 {
   "wireless": {
     "countrycode": "LT",
-    "scenario": "ptmp",
     "radio": [
       {
+        "enabled": true,
+        "ifname": "wifi0",
+        "bawinsize": 64,
+        "ieeemode": "bgn",
+        "acktimeout": 100,
         "fragmentation": {
           "enabled": false,
           "size": 256
         },
-        "ifname": "wifi0",
         "prohibited": false,
-        "ieeemode": "bgn",
-        "acktimeout": 100,
-        "bawinsize": 64,
-        "txpower": 17,
         "rts": {
           "enabled": false,
           "size": 256
         },
+        "txpower": 17,
+        "atpc": false,
+        "channel": {
+          "nonstandard": false,
+          "extension": "upper",
+          "list": [
+            2412
+          ],
+          "select": "list",
+          "width": 20
+        },
+        "dfs": false,
         "vap": [
-
 EOF
 }
 
 
 add_2() {
 cat >>temp<<EOF
-{
+          {
             "maxclients": 128,
-            "ifname": "ath0",
+            "wds": true,
             "bssid": {
               "value": "00:00:00:00:00:00",
               "enabled": false
             },
-            "cwm": false,
-			 "management": {
+            "management": {
               "enabled": false,
               "tagged": false
             },
@@ -48,35 +57,44 @@ cat >>temp<<EOF
             "mode": "ap",
             "minsignal": -90,
             "l2isolation": false,
-            "rate": {
-              "legacy": "auto",
-              "mcs": "auto"
+            "acl": {
+              "fromurl": {
+                "interval": 60,
+                "url": "http:\/\/",
+                "autoupdate": false
+              },
+              "policy": "open",
+              "source": "manually"
             },
             "ssid2vlan": {
 EOF
 }
 add_5() {
 cat >>temp<<EOF
-{
+ {
             "maxclients": 128,
-            "ifname": "ath1",
+            "wds": true,
             "bssid": {
               "value": "00:00:00:00:00:00",
               "enabled": false
             },
-            "cwm": false,
-			 "management": {
-             "enabled": false,
-             "tagged": false
+            "management": {
+              "enabled": true,
+              "tagged": true
             },
             "shortgi": true,
             "wmm": true,
             "mode": "ap",
             "minsignal": -90,
             "l2isolation": false,
-            "rate": {
-              "legacy": "auto",
-              "mcs": "auto"
+            "acl": {
+              "fromurl": {
+                "interval": 60,
+                "url": "http:\/\/",
+                "autoupdate": false
+              },
+              "policy": "open",
+              "source": "manually"
             },
             "ssid2vlan": {
 EOF
@@ -557,7 +575,6 @@ EOF
 add_vap2() {
 echo "\"id\":" $vlan_id","  >>temp
 cat >> temp<<EOF
- "enabled": true
             },
             "wds": true,
 EOF
