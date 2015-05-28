@@ -39,6 +39,10 @@ cat >>temp<<EOF
               "enabled": false
             },
             "cwm": false,
+			 "management": {
+              "enabled": false,
+              "tagged": false
+            },
             "shortgi": true,
             "wmm": true,
             "mode": "ap",
@@ -61,6 +65,10 @@ cat >>temp<<EOF
               "enabled": false
             },
             "cwm": false,
+			 "management": {
+             "enabled": false,
+             "tagged": false
+            },
             "shortgi": true,
             "wmm": true,
             "mode": "ap",
@@ -630,7 +638,7 @@ else
 	echo "pasirinkote WPA-ENTERPRICE(802.1x) rezima"
 	echo "irasykite vlan id"
 	read vlan_id
-	echo "irasykite RADIUS serverio IP adresà"
+	echo "irasykite RADIUS serverio IP adresa"
 	read radius
 	echo "irasykite RADIUS serverio slaptazodi"
 	read secret
