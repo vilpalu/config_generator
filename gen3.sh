@@ -707,6 +707,7 @@ then
 	add_vap
 	pabaiga
 elif [ "$pasirinkimas" = "2" ]
+then
 	echo "pasirinkote WPA-ENTERPRICE(802.1x) rezima"
 	echo "irasykite vlan id"
 	read vlan_id
@@ -722,6 +723,7 @@ elif [ "$pasirinkimas" = "2" ]
 	add_vap2
 	pabaiga
 elif [ "$pasirinkimas" = "3" ]
+then
 	echo "pasirinkote Open rezima"
 	echo "irasykite vlan, jei ne rasykite 0"
 	read vlan_id	
