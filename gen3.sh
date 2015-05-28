@@ -738,4 +738,3 @@ else
 	echo "tokio pasirinkimo nera"
 fi	
 mv temp $ssid.txt
-

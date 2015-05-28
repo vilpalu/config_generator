@@ -1,4 +1,10 @@
-
+#!/bin/bash
+#generatorius konfiguracijos
+temp="temp"
+ssid_file="ssids2G"
+ssid_file2="ssids5G"
+begin() {
+cat > temp <<EOF
 {
   "wireless": {
     "countrycode": "LT",
@@ -20,7 +26,14 @@
           "size": 256
         },
         "vap": [
-          {
+
+EOF
+}
+
+
+add_2() {
+cat >>ssids<<EOF
+{
             "maxclients": 128,
             "ifname": "ath0",
             "bssid": {
@@ -28,6 +41,10 @@
               "enabled": false
             },
             "cwm": false,
+			 "management": {
+              "enabled": false,
+              "tagged": false
+            },
             "shortgi": true,
             "wmm": true,
             "mode": "ap",
@@ -38,11 +55,52 @@
               "mcs": "auto"
             },
             "ssid2vlan": {
-"id": 0,
-"enabled": false
+EOF
+}
+add_5() {
+cat >>ssids2<<EOF
+{
+            "maxclients": 128,
+            "ifname": "ath1",
+            "bssid": {
+              "value": "00:00:00:00:00:00",
+              "enabled": false
+            },
+            "cwm": false,
+			 "management": {
+             "enabled": false,
+             "tagged": false
+            },
+            "shortgi": true,
+            "wmm": true,
+            "mode": "ap",
+            "minsignal": -90,
+            "l2isolation": false,
+            "rate": {
+              "legacy": "auto",
+              "mcs": "auto"
+            },
+            "ssid2vlan": {
+EOF
+}
+add_vap() {
+echo "\"id\":" $vlan_id","  >>temp
+if [ "$vlan_id" = "0" ]
+        then
+        echo "\"enabled\": false" >>temp
+        echo "nera vlan"
+else
+		echo "\"enabled\": true" >>temp
+        echo "yra vlan"
+fi
+
+cat >> temp<<EOF
             },
             "wds": true,
-"ssid": "tinklas",
+EOF
+
+echo  "\"ssid\": \""$ssid"\",">>temp
+cat >> temp<<EOF
             "acl": {
               "fromurl": {
                 "interval": 60,
@@ -59,7 +117,9 @@
             },
             "security": {
               "wpapsk": {
-"passphrase": "slaptazodis"
+EOF
+echo  "\"passphrase\": "\"$psw"\"">>temp
+cat >> temp<<EOF
               },
               "mode": "wpapsk",
               "wpaenterprise": {
@@ -93,7 +153,11 @@
               }
             }
           }
-        ],
+EOF
+}
+ghz() {
+cat >>temp<<EOF
+  ],
         "atpc": false,
         "channel": {
           "nonstandard": false,
@@ -126,80 +190,11 @@
           "size": 256
         },
         "vap": [
-          {
-            "maxclients": 128,
-            "ifname": "ath1",
-            "bssid": {
-              "value": "00:00:00:00:00:00",
-              "enabled": false
-            },
-            "cwm": false,
-            "shortgi": true,
-            "wmm": true,
-            "mode": "ap",
-            "minsignal": -90,
-            "l2isolation": false,
-            "rate": {
-              "legacy": "auto",
-              "mcs": "auto"
-            },
-            "ssid2vlan": {
-"id":  0,
-"enabled": false
-            },
-            "wds": true,
-"ssid": "tinklas",
-            "acl": {
-              "fromurl": {
-                "interval": 60,
-                "url": "http:\/\/",
-                "autoupdate": false
-              },
-              "policy": "open",
-              "source": "manually"
-            },
-            "hidden": false,
-            "management": {
-              "enabled": true,
-              "tagged": true
-            },
-            "security": {
-              "wpapsk": {
-"passphrase": "slaptazodis"
-              },
-              "mode": "wpapsk",
-              "wpaenterprise": {
-                "authentication": {
-                  "password": "password",
-                  "servers": [
-                    {
-                      "port": 1812,
-                      "secret": "",
-                      "address": "0.0.0.0"
-                    }
-                  ],
-                  "identity": "username",
-                  "eap": "ttls"
-                },
-                "accounting": {
-                  "servers": [
-                    {
-                      "port": 1813,
-                      "secret": "",
-                      "address": "0.0.0.0"
-                    }
-                  ],
-                  "enabled": true
-                }
-              },
-              "wep": {
-                "length": 128,
-                "key": "",
-                "index": 1
-              }
-            }
-          }
-        ],
+EOF
+}
+pabaiga() {
+cat>>temp<<EOF
+       ],
         "atpc": false,
         "channel": {
           "select": "all",
@@ -558,3 +553,199 @@
     }
   }
 }
+EOF
+}
+
+add_vap2() {
+echo "\"id\":" $vlan_id","  >>temp
+cat >> temp<<EOF
+ "enabled": true
+            },
+            "wds": true,
+EOF
+
+echo  "\"ssid\": \""$ssid"\",">>temp
+cat >>temp<< EOF
+            "rate": {
+              "legacy": "auto",
+              "mcs": "auto"
+            },
+            "hidden": false,
+            "cwm": false,
+            "security": {
+              "wpapsk": {
+                "passphrase": "slaptazodis"
+              },
+              "mode": "wpaenterprise",
+              "wpaenterprise": {
+                "authentication": {
+                  "eap": "ttls",
+                  "password": "password",
+                  "identity": "username",
+                  "servers": [
+                    {
+                      "port": 1812,
+EOF
+echo  "\"secret\": \""$secret"\",">>temp
+echo  "\"address\": \""$radius"\"">>temp
+cat >>temp<<EOF
+                    }
+                  ]
+                },
+                "accounting": {
+                  "servers": [
+                    {
+                      "port": 1813,
+EOF
+echo  "\"secret\": \""$secret"\",">>temp
+echo  "\"address\": \""$radius"\"">>temp
+cat >>temp<<EOF
+                    }
+                  ],
+                  "enabled": true
+                }
+              },
+              "wep": {
+                "length": 128,
+                "key": "",
+                "index": 1
+              }
+            }
+          }
+EOF
+}
+add_vap_open() {
+echo "\"id\":" $vlan_id","  >>ssids
+if [ "$vlan_id" = "0" ]
+        then
+        echo "\"enabled\": false" >>ssids
+        echo "nera vlan"
+else
+	echo "\"enabled\": true" >>ssids
+        echo "yra vlan"
+fi
+
+cat >> ssids<<EOF
+            },
+            "wds": true,
+EOF
+
+echo  "\"ssid\": \""$ssid"\",">>ssids
+cat >> ssids<<EOF
+            "acl": {
+              "fromurl": {
+                "interval": 60,
+                "url": "http:\/\/",
+                "autoupdate": false
+              },
+              "policy": "open",
+              "source": "manually"
+            },
+            "hidden": false,
+            "management": {
+              "enabled": false,
+              "tagged": false
+            },
+            "security": {
+              "wpapsk": {
+				"passphrase": "testasasdasda"
+              },
+              "mode": "open",
+              "wpaenterprise": {
+                "authentication": {
+                  "password": "password",
+                  "servers": [
+                    {
+                      "port": 1812,
+                      "secret": "",
+                      "address": "0.0.0.0"
+                    }
+                  ],
+                  "identity": "username",
+                  "eap": "ttls"
+                },
+                "accounting": {
+                  "servers": [
+                    {
+                      "port": 1813,
+                      "secret": "",
+                      "address": "0.0.0.0"
+                    }
+                  ],
+                  "enabled": true
+                }
+              },
+              "wep": {
+                "length": 128,
+                "key": "",
+                "index": 1
+              }
+            }
+          }
+EOF
+}
+
+#-----------------------------main
+rm temp
+echo "iveskite ssid kieki:"
+read kiekis
+let kiekis++
+while [ $kiek -lt $kiekis];
+do
+	echo "SSID:" "$kiek"
+	echo "irasykite tinklo pavadinima"
+	read ssid
+	echo " saugos rezimo pasirinkimas:"
+	echo "[1] WPA-SPK"
+	echo "[2] WPA-ENTERPRICE(802.1x)"
+	echo "[3] Open"
+	read pasirinkimas
+	if [ "$pasirinkimas" = "1" ]
+	then
+		echo "pasirinkote WPA-SPK rezima"
+		echo "irasykite vlan, jei ne rasykite 0"
+		read vlan_id
+		echo "irasykite tinklo slaptazodi"
+		read psw
+		begin
+		add_2
+		add_vap
+		ghz
+		add_5
+		add_vap
+		pabaiga
+	elif [ "$pasirinkimas" = "2" ]
+	then
+		echo "pasirinkote WPA-ENTERPRICE(802.1x) rezima"
+		echo "irasykite vlan id"
+		read vlan_id
+		echo "irasykite RADIUS serverio IP adresa"
+		read radius
+		echo "irasykite RADIUS serverio slaptazodi"
+		read secret
+		begin
+		add_2
+		add_vap2
+		ghz
+		add_5
+		add_vap2
+		pabaiga
+	elif [ "$pasirinkimas" = "3" ]
+	then
+		echo "pasirinkote Open rezima"
+		echo "irasykite vlan, jei ne rasykite 0"
+		read vlan_id	
+		begin
+		add_2
+		add_vap_open
+		ghz
+		add_5
+		add_vap_open
+		pabaiga
+	else
+		echo "tokio pasirinkimo nera"
+	fi
+	let kiek++
+done	
+mv temp $ssid.txt
+
