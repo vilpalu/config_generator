@@ -84,23 +84,23 @@ cat >>ssids2<<EOF
 EOF
 }
 add_vap() {
-echo "\"id\":" $vlan_id","  >>temp
+echo "\"id\":" $vlan_id","  >>ssid_file
 if [ "$vlan_id" = "0" ]
         then
-        echo "\"enabled\": false" >>temp
+        echo "\"enabled\": false" >>ssid_file
         echo "nera vlan"
 else
-		echo "\"enabled\": true" >>temp
+		echo "\"enabled\": true" >>ssid_file
         echo "yra vlan"
 fi
 
-cat >> temp<<EOF
+cat >> ssid_file<<EOF
             },
             "wds": true,
 EOF
 
-echo  "\"ssid\": \""$ssid"\",">>temp
-cat >> temp<<EOF
+echo  "\"ssid\": \""$ssid"\",">>ssid_file
+cat >> ssid_file<<EOF
             "acl": {
               "fromurl": {
                 "interval": 60,
@@ -118,8 +118,8 @@ cat >> temp<<EOF
             "security": {
               "wpapsk": {
 EOF
-echo  "\"passphrase\": "\"$psw"\"">>temp
-cat >> temp<<EOF
+echo  "\"passphrase\": "\"$psw"\"">>ssid_file
+cat >> ssid_file<<EOF
               },
               "mode": "wpapsk",
               "wpaenterprise": {
@@ -152,8 +152,14 @@ cat >> temp<<EOF
                 "index": 1
               }
             }
-          }
+          
 EOF
+if [$kiek > "1"]
+then
+	echo "}," >>ssids
+else
+	echo "}">>ssids
+fi
 }
 ghz() {
 cat >>temp<<EOF
@@ -681,15 +687,21 @@ cat >> ssids<<EOF
                 "index": 1
               }
             }
-          }
 EOF
+if [$kiek > "1"]
+then
+	echo "}," >>ssids
+else
+	echo "}">>ssids
+fi
 }
-
 #-----------------------------main
 rm temp
 echo "iveskite ssid kieki:"
 read kiekis
 let kiekis++
+		begin
+		add_2
 while [ $kiek -lt $kiekis];
 do
 	echo "SSID:" "$kiek"
@@ -707,13 +719,8 @@ do
 		read vlan_id
 		echo "irasykite tinklo slaptazodi"
 		read psw
-		begin
-		add_2
 		add_vap
-		ghz
-		add_5
 		add_vap
-		pabaiga
 	elif [ "$pasirinkimas" = "2" ]
 	then
 		echo "pasirinkote WPA-ENTERPRICE(802.1x) rezima"
@@ -723,29 +730,29 @@ do
 		read radius
 		echo "irasykite RADIUS serverio slaptazodi"
 		read secret
-		begin
-		add_2
 		add_vap2
 		ghz
 		add_5
 		add_vap2
-		pabaiga
 	elif [ "$pasirinkimas" = "3" ]
 	then
 		echo "pasirinkote Open rezima"
 		echo "irasykite vlan, jei ne rasykite 0"
 		read vlan_id	
-		begin
-		add_2
 		add_vap_open
 		ghz
 		add_5
 		add_vap_open
-		pabaiga
 	else
 		echo "tokio pasirinkimo nera"
 	fi
 	let kiek++
 done	
+cat $ssid_file>>temp
+ghz
+add_5
+cat $ssid_file2>>temp
+cat $ssid_file>>temp
+pabaiga
 mv temp $ssid.txt
 
